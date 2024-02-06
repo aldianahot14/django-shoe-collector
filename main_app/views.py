@@ -20,6 +20,22 @@ class ShoeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ShoeSerializer
     lookup_field = 'id'
 
+  # add (override) the retrieve method below
+def retrieve(self, request, *args, **kwargs):
+    instance = self.get_object()
+    serializer = self.get_serializer(instance)
+
+    # Get the list of toys not associated with this cat
+    accessories_not_associated = ShoeAccessory.objects.exclude(id__in=instance.accessories.all())
+    accessories_serializer = ShoeAccessorySerializer(accessories_not_associated, many=True)
+
+
+    return Response({
+        'shoe': serializer.data,
+        'accessories_not_associated': accessories_serializer.data
+    })
+
+
 class CleaningListCreate(generics.ListCreateAPIView):
     serializer_class = CleaningSerializer
 
@@ -49,3 +65,10 @@ class ShoeAccessoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShoeAccessory.objects.all()
     serializer_class = ShoeAccessorySerializer
     lookup_field = 'id'
+
+class AddShoeAccessoryToShoe(APIView):
+  def post(self, request, shoe_id, shoeAccessory_id):
+    shoe = Shoe.objects.get(id=shoe_id)
+    shoeAccessory = ShoeAccessory.objects.get(id=shoeAccessory_id)
+    shoe.shoeAccessory.add(shoeAccessory)
+    return Response({'message': f'ShoeAccessory {shoeAccessory.name} added to Shoe {shoe.name}'})

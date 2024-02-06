@@ -1,7 +1,7 @@
 from django.urls import path
 
 # import Home view from the views file
-from .views import Home, ShoeList, ShoeDetail, CleaningListCreate, CleaningDetail, ShoeAccessoryList, ShoeAccessoryDetail
+from .views import Home, ShoeList, ShoeDetail, CleaningListCreate, CleaningDetail, ShoeAccessoryList, ShoeAccessoryDetail, AddShoeAccessoryToShoe
 
 urlpatterns = [
   path('', Home.as_view(), name='home'),
@@ -11,4 +11,6 @@ urlpatterns = [
   path('shoes/<int:shoe_id>/cleanings/', CleaningDetail.as_view(), name='cleaning-detail'),
   path('shoeaccessory/', ShoeAccessoryList.as_view(), name='shoeaccessory-list'),
   path('shoeaccessory/<int:id>/', ShoeAccessoryDetail.as_view(), name='shoeaccessory-detail'),
+  path('shoes/<int:shoe_id>/add_shoeaccessory/<int:shoeAccessory_id>/', AddShoeAccessoryToShoe.as_view(), name='add-shoeaccessaory-to-shoe'),
 ]
+

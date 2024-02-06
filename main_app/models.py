@@ -17,7 +17,13 @@ CLEANING = (
 )
 
 # Create your models here
+class ShoeAccessory(models.Model):
+   name = models.CharField(max_length=50)
+   color = models.CharField(max_length=20)
 
+   def __str__(self):
+      return self.name    
+   
 class Shoe(models.Model):
     brand = models.CharField(max_length=100, default='')
     name = models.CharField(max_length=100, default='')
@@ -30,6 +36,7 @@ class Shoe(models.Model):
         choices=SHOE_CATEGORIES,
         default=SHOE_CATEGORIES[0][0]
     )
+    shoeAccessory = models.ManyToManyField(ShoeAccessory) 
 
     def __str__(self):
         return f"{self.brand} {self.model} - Size: {self.size}, Color: {self.color}, Purchased on: {self.purchase_date}"
@@ -37,12 +44,7 @@ class Shoe(models.Model):
     def clean_for_today(self):
         return self.cleaning_set.filter(date=date.today()).count() >= len(CLEANING)
 
-class ShoeAccessory(models.Model):
-   name = models.CharField(max_length=50)
-   color = models.CharField(max_length=20)
 
-   def __str__(self):
-      return self.name    
 
 class Cleaning(models.Model):
   date = models.DateField()
