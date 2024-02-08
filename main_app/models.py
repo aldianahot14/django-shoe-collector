@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
 
 
 SHOE_CATEGORIES = (
@@ -43,6 +44,7 @@ class Shoe(models.Model):
 
     def clean_for_today(self):
         return self.cleaning_set.filter(date=date.today()).count() >= len(CLEANING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 
